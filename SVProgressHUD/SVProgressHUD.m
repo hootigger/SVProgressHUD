@@ -607,7 +607,12 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
 
 #if !defined(SV_APP_EXTENSIONS) && TARGET_OS_IOS
     self.frame =  [SVProgressHUD mainWindow].bounds;
-    UIInterfaceOrientation orientation = UIApplication.sharedApplication.statusBarOrientation;
+    UIInterfaceOrientation orientation;
+    if (@available(iOS 13.0, *)) {
+        orientation = [SVProgressHUD mainWindow].windowScene.interfaceOrientation;
+    } else {
+        orientation = UIApplication.sharedApplication.statusBarOrientation;
+    }
 #elif !defined(SV_APP_EXTENSIONS) && !TARGET_OS_IOS
     self.frame = [SVProgressHUD mainWindow].bounds;
 #else
@@ -644,7 +649,12 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
     CGRect orientationFrame = self.bounds;
 
 #if !defined(SV_APP_EXTENSIONS) && TARGET_OS_IOS
-    CGRect statusBarFrame = UIApplication.sharedApplication.statusBarFrame;
+    CGRect statusBarFrame;
+    if (@available(iOS 13.0, *)) {
+        statusBarFrame = [SVProgressHUD mainWindow].windowScene.statusBarManager.statusBarFrame;
+    } else {
+        statusBarFrame = UIApplication.sharedApplication.statusBarFrame;
+    }
 #else
     CGRect statusBarFrame = CGRectZero;
 #endif
